@@ -42,6 +42,8 @@ class MainActivity : BaseActivity() {
 
         homeList = arrayListOf()
         homeRvSetup(homeList!!)
+
+        requestLocationPermission()
     }
 
     private fun findAllHomes() {

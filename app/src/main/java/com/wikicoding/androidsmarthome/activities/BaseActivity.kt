@@ -1,10 +1,19 @@
 package com.wikicoding.androidsmarthome.activities
 
+import android.Manifest
 import android.app.AlertDialog
 import android.app.Dialog
+import android.content.ActivityNotFoundException
 import android.content.Context
+import android.content.Intent
+import android.content.pm.PackageManager
+import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.provider.Settings
+import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.app.ActivityCompat
 import androidx.lifecycle.lifecycleScope
 import com.wikicoding.androidsmarthome.R
 import com.wikicoding.androidsmarthome.adapter.DevicesAdapter
@@ -119,6 +128,73 @@ open class BaseActivity : AppCompatActivity() {
                 deviceList!!.remove(device)
                 deviceAdapter!!.notifyItemRemoved(position)
             }
+        }
+    }
+
+    fun showRationalDialogForPermissions(context: Context) {
+        AlertDialog.Builder(context).setMessage("Permissions denied for this app")
+            .setPositiveButton("GO TO SETTINGS") { _, _ ->
+                try {
+                    val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
+                    val uri = Uri.fromParts("package", packageName, null)
+                    intent.data = uri
+                    startActivity(intent)
+                } catch (e: ActivityNotFoundException) {
+                    e.printStackTrace()
+                }
+            }.setNegativeButton("Cancel") { dialog, _ ->
+                dialog.dismiss()
+            }.show()
+    }
+
+    val locationPermissionRequest = registerForActivityResult(
+        ActivityResultContracts.RequestMultiplePermissions()
+    ) { permissions ->
+        when {
+            permissions.getOrDefault(Manifest.permission.ACCESS_FINE_LOCATION, false) -> {
+                // Precise location access granted
+                Toast.makeText(this, "Location access granted", Toast.LENGTH_SHORT).show()
+            }
+
+            permissions.getOrDefault(Manifest.permission.ACCESS_COARSE_LOCATION, false) -> {
+                // Only approximate location access granted.
+                Toast.makeText(this, "Only approximate location access granted", Toast.LENGTH_SHORT).show()
+            }
+
+            else -> {
+                // No location access granted
+                Toast.makeText(this, "No location access granted", Toast.LENGTH_SHORT).show()
+                showRationalDialogForPermissions(this)
+            }
+        }
+    }
+
+    fun requestLocationPermission() {
+        if (ActivityCompat.checkSelfPermission(
+                applicationContext,
+                Manifest.permission.ACCESS_FINE_LOCATION
+            ) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(
+                applicationContext,
+                Manifest.permission.ACCESS_COARSE_LOCATION
+            ) != PackageManager.PERMISSION_GRANTED
+        ) {
+            // TODO: Consider calling
+            //    ActivityCompat#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for ActivityCompat#requestPermissions for more details.
+
+            // Before you perform the actual permission request, check whether your app
+            // already has the permissions, and whether your app needs to show a permission
+            // rationale dialog. For more details, see Request permissions.
+            return locationPermissionRequest.launch(
+                arrayOf(
+                    Manifest.permission.ACCESS_FINE_LOCATION,
+                    Manifest.permission.ACCESS_COARSE_LOCATION
+                )
+            )
         }
     }
 }

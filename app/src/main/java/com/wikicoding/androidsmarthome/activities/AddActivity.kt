@@ -62,7 +62,14 @@ class AddActivity : BaseActivity() {
             binding!!.etAddress.setText(editingHome.address)
 
             binding!!.btnAdd.text = "Update Home"
-            binding!!.btnLocate.visibility = View.INVISIBLE
+            binding!!.btnLocate.setOnClickListener {
+                if (isLocationEnabled()) {
+                    pleaseWaitDialog.show()
+                    getLocation()
+                } else {
+                    Toast.makeText(this, "Please turn on Location", Toast.LENGTH_LONG).show()
+                }
+            }
 
             binding!!.btnAdd.setOnClickListener {
                 val homeName = binding!!.etHomeName.text.toString()

@@ -60,6 +60,8 @@ class AddActivity : BaseActivity() {
 
             binding!!.etHomeName.setText(editingHome.homeName)
             binding!!.etAddress.setText(editingHome.address)
+            binding!!.etLatitude.setText(editingHome.lat.toString())
+            binding!!.etLongitude.setText(editingHome.lng.toString())
 
             binding!!.btnAdd.text = "Update Home"
             binding!!.btnLocate.setOnClickListener {

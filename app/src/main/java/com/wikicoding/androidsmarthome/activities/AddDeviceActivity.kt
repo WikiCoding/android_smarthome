@@ -25,7 +25,7 @@ class AddDeviceActivity : BaseActivity(), AdapterView.OnItemSelectedListener {
         binding = ActivityAddDeviceBinding.inflate(layoutInflater)
         setContentView(binding!!.root)
 
-        supportActionBar!!.setDisplayHomeAsUpEnabled(true)
+//        supportActionBar!!.setDisplayHomeAsUpEnabled(true)
 
         setupDeviceTypeDropdownMenu()
 

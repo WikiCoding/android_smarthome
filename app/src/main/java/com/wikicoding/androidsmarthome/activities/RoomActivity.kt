@@ -31,11 +31,19 @@ class RoomActivity : BaseActivity() {
         binding = ActivityRoomBinding.inflate(layoutInflater)
         setContentView(binding!!.root)
 
+//        if (intent.hasExtra(Constants.intentDeviceEditExtra)) {
+//            val homeId = intent.getIntExtra(Constants.intentDeviceEditExtra, 0)
+//            lifecycleScope.launch {
+//                currentHome = dao.findHomeById(homeId)
+//            }
+//        }
+
         if (intent.hasExtra(Constants.intentRoomExtra)) {
             currentHome = intent.getSerializableExtra(Constants.intentRoomExtra) as HomeEntity?
         }
 
-        supportActionBar!!.setDisplayHomeAsUpEnabled(true)
+
+//        supportActionBar!!.setDisplayHomeAsUpEnabled(true)
         supportActionBar!!.title = currentHome!!.homeName
 
         findRoomsByHouseId(currentHome!!.homeId)

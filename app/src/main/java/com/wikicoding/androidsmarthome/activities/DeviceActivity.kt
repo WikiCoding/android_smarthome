@@ -34,7 +34,7 @@ class DeviceActivity : BaseActivity() {
             currentRoom = intent.getSerializableExtra(Constants.intentRoomExtra) as RoomEntity?
         }
 
-        supportActionBar!!.setDisplayHomeAsUpEnabled(true)
+//        supportActionBar!!.setDisplayHomeAsUpEnabled(true)
         supportActionBar!!.title = currentRoom!!.roomName
 
         findAllDevicesByRoomId(currentRoom!!.roomId)
@@ -121,6 +121,9 @@ class DeviceActivity : BaseActivity() {
     override fun onContextItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             android.R.id.home -> {
+//                val intent = Intent(this@DeviceActivity, RoomActivity::class.java)
+//                intent.putExtra(Constants.intentDeviceEditExtra, currentRoom!!.homeId)
+//                startActivity(intent)
                 finish()
                 return true
             }

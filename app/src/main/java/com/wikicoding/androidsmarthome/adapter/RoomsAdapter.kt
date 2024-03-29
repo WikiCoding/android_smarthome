@@ -28,7 +28,7 @@ class RoomsAdapter(private val roomList: List<RoomEntity>) : RecyclerView.Adapte
 
         holder.rvRoomName.text = "Name: ${roomInstance.roomName}"
         holder.rvRoomFloor.text = "Floor: ${roomInstance.roomFloor}"
-        holder.rvRoomArea.text = "Area: ${roomInstance.roomArea}"
+        holder.rvRoomArea.text = "Area: ${roomInstance.roomArea} m^2"
 
         holder.itemView.setOnClickListener {
             if (onClicked != null) {

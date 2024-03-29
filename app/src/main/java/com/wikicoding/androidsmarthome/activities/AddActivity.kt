@@ -17,7 +17,7 @@ class AddActivity : BaseActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityAddBinding.inflate(layoutInflater)
         setContentView(binding!!.root)
-        supportActionBar!!.setDisplayHomeAsUpEnabled(true)
+//        supportActionBar!!.setDisplayHomeAsUpEnabled(true)
 
         if (intent.hasExtra(Constants.intentHomeEditExtra)) {
             val editingHome = intent.getSerializableExtra(Constants.intentHomeEditExtra) as HomeEntity?

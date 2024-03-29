@@ -19,7 +19,7 @@ class AddRoomActivity : BaseActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityAddRoomBinding.inflate(layoutInflater)
         setContentView(binding!!.root)
-        supportActionBar!!.setDisplayHomeAsUpEnabled(true)
+//        supportActionBar!!.setDisplayHomeAsUpEnabled(true)
 
         if (intent.hasExtra(Constants.intentRoomEditExtra)) {
             currentRoom = intent.getSerializableExtra(Constants.intentRoomEditExtra) as RoomEntity?

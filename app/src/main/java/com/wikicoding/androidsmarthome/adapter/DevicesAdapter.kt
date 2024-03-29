@@ -77,7 +77,7 @@ class DevicesAdapter(private val deviceList: List<DeviceEntity>) : RecyclerView.
             "presence" -> holder.rvDeviceInstantMeasurement.text = "Instant measurement: ${detectionVal[randomBinary]}"
             "on off" -> holder.rvDeviceInstantMeasurement.text = "Instant measurement: ${connectionVal[randomBinary]}"
             "speed" -> holder.rvDeviceInstantMeasurement.text = "Instant measurement: ${randomSpeed}km/h"
-            "light dimmer" -> holder.rvDeviceInstantMeasurement.text = "Instant measurement: ${randomPercent}km/h"
+            "light dimmer" -> holder.rvDeviceInstantMeasurement.text = "Instant measurement: ${randomPercent}%"
             else -> holder.rvDeviceInstantMeasurement.text = "Measurement Not Supported"
         }
     }

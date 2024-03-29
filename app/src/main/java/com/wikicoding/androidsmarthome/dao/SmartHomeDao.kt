@@ -18,6 +18,9 @@ interface SmartHomeDao {
     @Query("SELECT * FROM home ORDER BY homeName ASC")
     suspend fun findAllHomes(): List<HomeEntity>
 
+    @Query("SELECT * FROM home WHERE homeId = :homeId")
+    suspend fun findHomeById(homeId: Int): HomeEntity
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun addHome(homeEntity: HomeEntity)
 

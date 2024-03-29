@@ -19,6 +19,32 @@ class AddActivity : BaseActivity() {
         setContentView(binding!!.root)
         supportActionBar!!.setDisplayHomeAsUpEnabled(true)
 
+        if (intent.hasExtra(Constants.intentHomeEditExtra)) {
+            val editingHome = intent.getSerializableExtra(Constants.intentHomeEditExtra) as HomeEntity?
+            supportActionBar!!.title = "Edit Home ${editingHome!!.homeName}"
+
+            binding!!.etHomeName.setText(editingHome?.homeName)
+            binding!!.etAddress.setText(editingHome?.address)
+
+            binding!!.btnAdd.text = "Update Home"
+
+            binding!!.btnAdd.setOnClickListener {
+                val homeName = binding!!.etHomeName.text.toString()
+                val homeAddress = binding!!.etAddress.text.toString()
+
+                if (homeName.isEmpty() || homeAddress.isBlank() ||
+                    homeAddress.isEmpty() || homeAddress.isBlank()
+                ) {
+                    dialogErrorFillingForm(this)
+                    return@setOnClickListener
+                }
+
+                val home = HomeEntity(editingHome!!.homeId, homeName.trim(), homeAddress.trim())
+                updateHome(home)
+                finish()
+            }
+        }
+
         if (intent.hasExtra(Constants.intentHomeExtra)) {
             supportActionBar!!.title = "Add ${Constants.intentHomeValueExtra}"
 
@@ -37,6 +63,12 @@ class AddActivity : BaseActivity() {
                 addHome(home)
                 finish()
             }
+        }
+    }
+
+    private fun updateHome(home: HomeEntity) {
+        lifecycleScope.launch {
+            dao.updateHome(home)
         }
     }
 

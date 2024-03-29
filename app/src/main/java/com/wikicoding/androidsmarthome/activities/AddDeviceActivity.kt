@@ -18,6 +18,7 @@ import kotlinx.coroutines.launch
 class AddDeviceActivity : BaseActivity() {
     private var binding: ActivityAddDeviceBinding? = null
     private var currentRoom: RoomEntity? = null
+    private var currentDevice: DeviceEntity? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -25,6 +26,33 @@ class AddDeviceActivity : BaseActivity() {
         setContentView(binding!!.root)
 
         supportActionBar!!.setDisplayHomeAsUpEnabled(true)
+
+        if (intent.hasExtra(Constants.intentDeviceEditExtra)) {
+            currentDevice = intent.getSerializableExtra(Constants.intentDeviceEditExtra) as DeviceEntity?
+
+            supportActionBar!!.title = "Edit Device ${currentDevice!!.deviceName}"
+
+            binding!!.btnAdd.text = "Edit Device"
+            binding!!.etDeviceName.setText(currentDevice!!.deviceName)
+            binding!!.etDeviceType.setText(currentDevice!!.deviceType)
+
+            binding!!.btnAdd.setOnClickListener {
+                val deviceName = binding!!.etDeviceName.text.toString()
+                val deviceType = binding!!.etDeviceType.text.toString()
+
+                if (deviceName.isEmpty() || deviceName.isBlank() ||
+                    deviceType.isEmpty() || deviceType.isBlank()
+                ) {
+                    dialogErrorFillingForm(this)
+                    return@setOnClickListener
+                }
+
+                val device = DeviceEntity(currentDevice!!.deviceId, deviceName.trim(), deviceType.trim(),
+                    currentDevice!!.deviceEnabled, currentDevice!!.roomId)
+                updateDevice(device)
+                finish()
+            }
+        }
 
         if (intent.hasExtra(Constants.intentRoomExtra)) {
             supportActionBar!!.title = "Add to ${Constants.intentRoomValueExtra}"
@@ -42,10 +70,16 @@ class AddDeviceActivity : BaseActivity() {
                     return@setOnClickListener
                 }
 
-                val device = DeviceEntity(0, deviceName.trim(), deviceType.trim(), currentRoom!!.roomId)
+                val device = DeviceEntity(0, deviceName.trim(), deviceType.trim(), true, currentRoom!!.roomId)
                 addDevice(device)
                 finish()
             }
+        }
+    }
+
+    private fun updateDevice(device: DeviceEntity) {
+        lifecycleScope.launch {
+            dao.updateDevice(device)
         }
     }
 

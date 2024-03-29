@@ -16,6 +16,7 @@ import com.wikicoding.androidsmarthome.model.HomeEntity
 import com.wikicoding.androidsmarthome.model.RoomEntity
 import com.wikicoding.androidsmarthome.model.relations.HomeWithRooms
 import com.wikicoding.explorelog.utils.SwipeToDeleteCallback
+import com.wikicoding.explorelog.utils.SwipeToEditCallback
 import kotlinx.coroutines.launch
 
 class RoomActivity : BaseActivity() {
@@ -46,6 +47,7 @@ class RoomActivity : BaseActivity() {
         }
 
         handleDeleteSwipe()
+        handleEditSwipe()
     }
 
     private fun findRoomsByHouseId(idHouse: Int) {
@@ -82,14 +84,30 @@ class RoomActivity : BaseActivity() {
                 val rvAdapter = binding!!.rvRooms.adapter as RoomsAdapter
                 val itemToDelete = rvAdapter.findSwipedItem(viewHolder.adapterPosition)
                 deleteConfirmationDialog(
-                    this@RoomActivity, null, itemToDelete, null,
-                    roomsList!!, null, adapter, viewHolder.adapterPosition
-                )
+                    this@RoomActivity, null, itemToDelete, null, null,
+                    roomsList!!, null, null, adapter, null,
+                    viewHolder.adapterPosition)
             }
         }
 
         val deleteItemTouchHandler = ItemTouchHelper(deleteSwipeHandler)
         deleteItemTouchHandler.attachToRecyclerView(binding!!.rvRooms)
+    }
+
+    private fun handleEditSwipe() {
+        val editItemSwipeHandler = object : SwipeToEditCallback(this) {
+            override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
+                val rvAdapter = binding!!.rvRooms.adapter as RoomsAdapter
+                val itemToEdit: RoomEntity = rvAdapter.findSwipedItem(viewHolder.adapterPosition)
+
+                val intent = Intent(this@RoomActivity, AddRoomActivity::class.java)
+                intent.putExtra(Constants.intentRoomEditExtra, itemToEdit)
+                startActivity(intent)
+            }
+        }
+
+        val editItemTouchHandler = ItemTouchHelper(editItemSwipeHandler)
+        editItemTouchHandler.attachToRecyclerView(binding!!.rvRooms)
     }
 
     override fun onContextItemSelected(item: MenuItem): Boolean {

@@ -6,6 +6,7 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Transaction
+import androidx.room.Update
 import com.wikicoding.androidsmarthome.model.DeviceEntity
 import com.wikicoding.androidsmarthome.model.HomeEntity
 import com.wikicoding.androidsmarthome.model.RoomEntity
@@ -20,6 +21,9 @@ interface SmartHomeDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun addHome(homeEntity: HomeEntity)
 
+    @Update(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun updateHome(home: HomeEntity)
+
     @Delete
     suspend fun deleteHome(homeEntity: HomeEntity)
 
@@ -30,6 +34,9 @@ interface SmartHomeDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun addRoom(room: RoomEntity)
 
+    @Update(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun updateRoom(room: RoomEntity)
+
     @Delete
     suspend fun deleteRoom(room: RoomEntity)
 
@@ -39,4 +46,10 @@ interface SmartHomeDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun addDevice(device: DeviceEntity)
+
+    @Update(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun updateDevice(device: DeviceEntity)
+
+    @Delete
+    suspend fun deleteDevice(device: DeviceEntity)
 }

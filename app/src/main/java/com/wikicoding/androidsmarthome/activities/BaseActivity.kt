@@ -7,11 +7,13 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.lifecycle.lifecycleScope
 import com.wikicoding.androidsmarthome.R
+import com.wikicoding.androidsmarthome.adapter.DevicesAdapter
 import com.wikicoding.androidsmarthome.adapter.MainAdapter
 import com.wikicoding.androidsmarthome.adapter.RoomsAdapter
 import com.wikicoding.androidsmarthome.dao.SmartHomeApp
 import com.wikicoding.androidsmarthome.dao.SmartHomeDao
 import com.wikicoding.androidsmarthome.databinding.DeleteConfirmationDialogBinding
+import com.wikicoding.androidsmarthome.model.DeviceEntity
 import com.wikicoding.androidsmarthome.model.HomeEntity
 import com.wikicoding.androidsmarthome.model.RoomEntity
 import kotlinx.coroutines.launch
@@ -36,16 +38,16 @@ open class BaseActivity : AppCompatActivity() {
         formErrorDialog.show()
     }
 
-    fun deleteConfirmationDialog(context: Context, homeEntity: HomeEntity?, roomEntity: RoomEntity?,
-                                 homeList: ArrayList<HomeEntity>?, roomsList: ArrayList<RoomEntity>?,
-                                 homeAdapter: MainAdapter?, roomsAdapter: RoomsAdapter?,
+    fun deleteConfirmationDialog(context: Context, homeEntity: HomeEntity?, roomEntity: RoomEntity?, deviceEntity: DeviceEntity?,
+                                 homeList: ArrayList<HomeEntity>?, roomsList: ArrayList<RoomEntity>?, deviceList: ArrayList<DeviceEntity>?,
+                                 homeAdapter: MainAdapter?, roomsAdapter: RoomsAdapter?, devicesAdapter: DevicesAdapter?,
                                  position: Int) {
         val (deleteConfirmationDialog, dialogBinding) = createShowDeleteDialog(context)
 
-        handleDeleteDialogProceedClick(dialogBinding, context, homeEntity, roomEntity,
-            homeList, roomsList, homeAdapter, roomsAdapter, position, deleteConfirmationDialog)
+        handleDeleteDialogProceedClick(dialogBinding, context, homeEntity, roomEntity, deviceEntity,
+            homeList, roomsList, deviceList, homeAdapter, roomsAdapter, devicesAdapter, position, deleteConfirmationDialog)
 
-        handleDeleteDialogCancelClick(dialogBinding, deleteConfirmationDialog, context, homeAdapter, roomsAdapter)
+        handleDeleteDialogCancelClick(dialogBinding, deleteConfirmationDialog, context, homeAdapter, roomsAdapter, devicesAdapter)
     }
 
     private fun createShowDeleteDialog(context: Context): Pair<Dialog, DeleteConfirmationDialogBinding> {
@@ -63,37 +65,42 @@ open class BaseActivity : AppCompatActivity() {
         deleteConfirmationDialog: Dialog,
         context: Context,
         homeAdapter: MainAdapter?,
-        roomAdapter: RoomsAdapter?
+        roomAdapter: RoomsAdapter?,
+        deviceAdapter: DevicesAdapter?
     ) {
         dialogBinding.tvCancel.setOnClickListener {
             deleteConfirmationDialog.dismiss()
             if (context is MainActivity) {
                 homeAdapter!!.notifyDataSetChanged()
-            } else {
+            } else if (context is RoomActivity) {
                 roomAdapter!!.notifyDataSetChanged()
+            } else {
+                deviceAdapter!!.notifyDataSetChanged()
             }
         }
     }
 
     private fun handleDeleteDialogProceedClick(dialogBinding: DeleteConfirmationDialogBinding,
-                                               context: Context, home: HomeEntity?, room: RoomEntity?,
-                                               homeList: ArrayList<HomeEntity>?, roomList: ArrayList<RoomEntity>?,
-                                               homeAdapter: MainAdapter?, roomAdapter: RoomsAdapter?,
+                                               context: Context, home: HomeEntity?, room: RoomEntity?, device: DeviceEntity?,
+                                               homeList: ArrayList<HomeEntity>?, roomList: ArrayList<RoomEntity>?, deviceList: ArrayList<DeviceEntity>?,
+                                               homeAdapter: MainAdapter?, roomAdapter: RoomsAdapter?, devicesAdapter: DevicesAdapter?,
                                                position: Int, deleteConfirmationDialog: Dialog
     ) {
         dialogBinding.tvProceed.setOnClickListener {
             if (home != null) {
-                proceedDeleting(home, null, homeList!!, null, homeAdapter!!,null, position)
+                proceedDeleting(home, null, null, homeList!!, null, null, homeAdapter!!,null, null, position)
             } else if (room != null) {
-                proceedDeleting(null, room, null, roomList!!, null, roomAdapter!!, position)
+                proceedDeleting(null, room, null, null, roomList!!, null, null, roomAdapter!!, null, position)
+            } else if (device != null) {
+                proceedDeleting(null, null, device, null, null, deviceList, null, null, devicesAdapter, position)
             }
             deleteConfirmationDialog.dismiss()
         }
     }
 
-    private fun proceedDeleting(home: HomeEntity?, room: RoomEntity?,
-                                homeList: ArrayList<HomeEntity>?, roomList: ArrayList<RoomEntity>?,
-                                homeAdapter: MainAdapter?, roomAdapter: RoomsAdapter?, position: Int) {
+    private fun proceedDeleting(home: HomeEntity?, room: RoomEntity?, device: DeviceEntity?,
+                                homeList: ArrayList<HomeEntity>?, roomList: ArrayList<RoomEntity>?, deviceList: ArrayList<DeviceEntity>?,
+                                homeAdapter: MainAdapter?, roomAdapter: RoomsAdapter?, deviceAdapter: DevicesAdapter?, position: Int) {
         if (home != null) {
             lifecycleScope.launch {
                 dao.deleteHome(home!!)
@@ -105,6 +112,12 @@ open class BaseActivity : AppCompatActivity() {
                 dao.deleteRoom(room)
                 roomList!!.remove(room)
                 roomAdapter!!.notifyItemRemoved(position)
+            }
+        } else if (device != null) {
+            lifecycleScope.launch {
+                dao.deleteDevice(device)
+                deviceList!!.remove(device)
+                deviceAdapter!!.notifyItemRemoved(position)
             }
         }
     }

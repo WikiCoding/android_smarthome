@@ -12,7 +12,9 @@ import com.wikicoding.androidsmarthome.constants.Constants
 import com.wikicoding.androidsmarthome.databinding.ActivityMainBinding
 import com.wikicoding.androidsmarthome.model.HomeEntity
 import com.wikicoding.explorelog.utils.SwipeToDeleteCallback
+import com.wikicoding.explorelog.utils.SwipeToEditCallback
 import kotlinx.coroutines.launch
+import java.io.Serializable
 
 class MainActivity : BaseActivity() {
     private var binding: ActivityMainBinding? = null
@@ -35,6 +37,8 @@ class MainActivity : BaseActivity() {
         }
 
         handleDeleteSwipe()
+
+        handleEditSwipe()
 
         homeList = arrayListOf()
         homeRvSetup(homeList!!)
@@ -68,13 +72,30 @@ class MainActivity : BaseActivity() {
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
                 val rvAdapter = binding!!.rvHomes.adapter as MainAdapter
                 val itemToDelete = rvAdapter.findSwipedItem(viewHolder.adapterPosition)
-                deleteConfirmationDialog(this@MainActivity, itemToDelete, null,
-                    homeList!!, null, adapter, null, viewHolder.adapterPosition)
+                deleteConfirmationDialog(this@MainActivity, itemToDelete, null, null,
+                    homeList!!, null, null, adapter, null, null,
+                    viewHolder.adapterPosition)
             }
         }
 
         val deleteItemTouchHandler = ItemTouchHelper(deleteSwipeHandler)
         deleteItemTouchHandler.attachToRecyclerView(binding!!.rvHomes)
+    }
+
+    private fun handleEditSwipe() {
+        val editItemSwipeHandler = object : SwipeToEditCallback(this) {
+            override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
+                val rvAdapter = binding!!.rvHomes.adapter as MainAdapter
+                val itemToEdit: HomeEntity = rvAdapter.findSwipedItem(viewHolder.adapterPosition)
+
+                val intent = Intent(this@MainActivity, AddActivity::class.java)
+                intent.putExtra(Constants.intentHomeEditExtra, itemToEdit)
+                startActivity(intent)
+            }
+        }
+
+        val editItemTouchHandler = ItemTouchHelper(editItemSwipeHandler)
+        editItemTouchHandler.attachToRecyclerView(binding!!.rvHomes)
     }
 
     override fun onResume() {

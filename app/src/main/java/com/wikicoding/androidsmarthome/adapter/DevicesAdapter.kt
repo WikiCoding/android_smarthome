@@ -59,9 +59,25 @@ class DevicesAdapter(private val deviceList: List<DeviceEntity>) : RecyclerView.
         val humLowerLimit = 40
         val humUpperLimit = 98
         val randomHum = Random.nextInt(humLowerLimit, humUpperLimit + 1)
+
+        val speedLowerLimit = 0
+        val speedUpperLimit = 49
+        val randomSpeed = Random.nextInt(speedLowerLimit, speedUpperLimit + 1)
+
+        val percentLowerLimit = 0
+        val percentUpperLimit = 99
+        val randomPercent = Random.nextInt(percentLowerLimit, percentUpperLimit + 1)
+
+        val detectionVal = listOf("Not Detected", "Detected")
+        val connectionVal = listOf("Connected", "Not Connected")
+        val randomBinary = Random.nextInt(0, 2)
         when (deviceType.lowercase()) {
             "temperature" -> holder.rvDeviceInstantMeasurement.text = "Instant measurement: ${randomTemp}ºC"
             "humidity" -> holder.rvDeviceInstantMeasurement.text = "Instant measurement: ${randomHum}%"
+            "presence" -> holder.rvDeviceInstantMeasurement.text = "Instant measurement: ${detectionVal[randomBinary]}"
+            "on off" -> holder.rvDeviceInstantMeasurement.text = "Instant measurement: ${connectionVal[randomBinary]}"
+            "speed" -> holder.rvDeviceInstantMeasurement.text = "Instant measurement: ${randomSpeed}km/h"
+            "light dimmer" -> holder.rvDeviceInstantMeasurement.text = "Instant measurement: ${randomPercent}km/h"
             else -> holder.rvDeviceInstantMeasurement.text = "Measurement Not Supported"
         }
     }

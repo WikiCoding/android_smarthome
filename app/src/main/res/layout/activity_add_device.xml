@@ -53,6 +53,30 @@
             android:textColorHint="#7A8089" />
 
     </com.google.android.material.textfield.TextInputLayout>
+
+    <TextView
+        android:id="@+id/tv_dev_type_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Measurement Supported Device Types"
+        android:textColor="?android:textColorPrimary"
+        app:layout_constraintTop_toBottomOf="@id/til_device_type"
+        app:layout_constraintBottom_toTopOf="@id/dropdown_device_type"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <Spinner
+        android:id="@+id/dropdown_device_type"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@android:drawable/btn_dropdown"
+        android:textColor="?android:textColorPrimary"
+        android:spinnerMode="dropdown"
+        app:layout_constraintTop_toBottomOf="@id/tv_dev_type_title"
+        app:layout_constraintBottom_toTopOf="@id/btn_add"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        />
     <!--    End: Device Screen-->
 
 

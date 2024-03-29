@@ -55,9 +55,9 @@ class AddDeviceActivity : BaseActivity() {
         }
 
         if (intent.hasExtra(Constants.intentRoomExtra)) {
-            supportActionBar!!.title = "Add to ${Constants.intentRoomValueExtra}"
-
             currentRoom = intent.getSerializableExtra(Constants.intentRoomExtra) as RoomEntity?
+
+            supportActionBar!!.title = "Add to ${currentRoom!!.roomName}"
 
             binding!!.btnAdd.setOnClickListener {
                 val deviceName = binding!!.etDeviceName.text.toString()

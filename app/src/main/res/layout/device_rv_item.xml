@@ -51,6 +51,15 @@
                     tools:text="Grandma House Street 185 8957-471 Spain" />
 
                 <TextView
+                    android:id="@+id/tv_device_instant_measurement"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="5dp"
+                    android:textSize="24sp"
+                    android:textStyle="bold"
+                    tools:text="Grandma House Street 185 8957-471 Spain" />
+
+                <TextView
                     android:id="@+id/tv_device_enabled"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"

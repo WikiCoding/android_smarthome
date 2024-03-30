@@ -54,70 +54,80 @@ class AddActivity : BaseActivity() {
         getLocation()
 
         if (intent.hasExtra(Constants.intentHomeEditExtra)) {
-            val editingHome =
-                intent.getSerializableExtra(Constants.intentHomeEditExtra) as HomeEntity?
-            supportActionBar!!.title = "Edit Home ${editingHome!!.homeName}"
-
-            binding!!.etHomeName.setText(editingHome.homeName)
-            binding!!.etAddress.setText(editingHome.address)
-            binding!!.etLatitude.setText(editingHome.lat.toString())
-            binding!!.etLongitude.setText(editingHome.lng.toString())
-
-            binding!!.btnAdd.text = "Update Home"
-            binding!!.btnLocate.setOnClickListener {
-                if (isLocationEnabled()) {
-                    pleaseWaitDialog.show()
-                    getLocation()
-                } else {
-                    Toast.makeText(this, "Please turn on Location", Toast.LENGTH_LONG).show()
-                }
-            }
-
-            binding!!.btnAdd.setOnClickListener {
-                val homeName = binding!!.etHomeName.text.toString()
-                val homeAddress = binding!!.etAddress.text.toString()
-
-                if (homeName.isEmpty() || homeAddress.isBlank() ||
-                    homeAddress.isEmpty() || homeAddress.isBlank()
-                ) {
-                    dialogErrorFillingForm(this)
-                    return@setOnClickListener
-                }
-
-                val home = HomeEntity(editingHome!!.homeId, homeName.trim(), homeAddress.trim(),
-                    latitude, longitude)
-                updateHome(home)
-                finish()
-            }
+            handleEditHome()
         }
 
         if (intent.hasExtra(Constants.intentHomeExtra)) {
-            supportActionBar!!.title = "Add ${Constants.intentHomeValueExtra}"
+            handleCreateHome()
+        }
+    }
 
-            binding!!.btnLocate.setOnClickListener {
-                if (isLocationEnabled()) {
-                    pleaseWaitDialog.show()
-                    getLocation()
-                } else {
-                    Toast.makeText(this, "Please turn on Location", Toast.LENGTH_LONG).show()
-                }
+    private fun handleCreateHome() {
+        supportActionBar!!.title = "Add ${Constants.intentHomeValueExtra}"
+
+        binding!!.btnLocate.setOnClickListener {
+            if (isLocationEnabled()) {
+                pleaseWaitDialog.show()
+                getLocation()
+            } else {
+                Toast.makeText(this, "Please turn on Location", Toast.LENGTH_LONG).show()
+            }
+        }
+
+        binding!!.btnAdd.setOnClickListener {
+            val homeName = binding!!.etHomeName.text.toString()
+            val homeAddress = binding!!.etAddress.text.toString()
+
+            if (homeName.isEmpty() || homeAddress.isBlank() ||
+                homeAddress.isEmpty() || homeAddress.isBlank()
+            ) {
+                dialogErrorFillingForm(this)
+                return@setOnClickListener
             }
 
-            binding!!.btnAdd.setOnClickListener {
-                val homeName = binding!!.etHomeName.text.toString()
-                val homeAddress = binding!!.etAddress.text.toString()
+            val home = HomeEntity(0, homeName.trim(), homeAddress.trim(), latitude, longitude)
+            addHome(home)
+            finish()
+        }
+    }
 
-                if (homeName.isEmpty() || homeAddress.isBlank() ||
-                    homeAddress.isEmpty() || homeAddress.isBlank()
-                ) {
-                    dialogErrorFillingForm(this)
-                    return@setOnClickListener
-                }
+    private fun handleEditHome() {
+        val editingHome =
+            intent.getSerializableExtra(Constants.intentHomeEditExtra) as HomeEntity?
+        supportActionBar!!.title = "Edit Home ${editingHome!!.homeName}"
 
-                val home = HomeEntity(0, homeName.trim(), homeAddress.trim(), latitude, longitude)
-                addHome(home)
-                finish()
+        binding!!.etHomeName.setText(editingHome.homeName)
+        binding!!.etAddress.setText(editingHome.address)
+        binding!!.etLatitude.setText(editingHome.lat.toString())
+        binding!!.etLongitude.setText(editingHome.lng.toString())
+
+        binding!!.btnAdd.text = "Update Home"
+        binding!!.btnLocate.setOnClickListener {
+            if (isLocationEnabled()) {
+                pleaseWaitDialog.show()
+                getLocation()
+            } else {
+                Toast.makeText(this, "Please turn on Location", Toast.LENGTH_LONG).show()
             }
+        }
+
+        binding!!.btnAdd.setOnClickListener {
+            val homeName = binding!!.etHomeName.text.toString()
+            val homeAddress = binding!!.etAddress.text.toString()
+
+            if (homeName.isEmpty() || homeAddress.isBlank() ||
+                homeAddress.isEmpty() || homeAddress.isBlank()
+            ) {
+                dialogErrorFillingForm(this)
+                return@setOnClickListener
+            }
+
+            val home = HomeEntity(
+                editingHome!!.homeId, homeName.trim(), homeAddress.trim(),
+                latitude, longitude
+            )
+            updateHome(home)
+            finish()
         }
     }
 

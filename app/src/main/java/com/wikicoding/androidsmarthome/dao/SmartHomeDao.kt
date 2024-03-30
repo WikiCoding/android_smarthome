@@ -55,4 +55,10 @@ interface SmartHomeDao {
 
     @Delete
     suspend fun deleteDevice(device: DeviceEntity)
+
+    @Transaction
+    @Query("SELECT * FROM home " +
+            "JOIN rooms ON home.homeId = rooms.homeId " +
+            "JOIN devices ON devices.roomId = rooms.roomId WHERE home.homeId = :homeId ORDER BY rooms.roomId")
+    suspend fun findAllDevicesByHomeId(homeId: Int): List<RoomWithDevices>
 }

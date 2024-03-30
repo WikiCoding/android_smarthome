@@ -56,6 +56,12 @@ class RoomActivity : BaseActivity() {
 
         handleDeleteSwipe()
         handleEditSwipe()
+
+        binding!!.btnGetDevices.setOnClickListener {
+            val intent = Intent(this, HomeDevicesActivity::class.java)
+            intent.putExtra(Constants.intentHomeExtra, currentHome)
+            startActivity(intent)
+        }
     }
 
     private fun findRoomsByHouseId(idHouse: Int) {
